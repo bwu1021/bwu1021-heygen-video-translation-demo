@@ -2,7 +2,7 @@
 
 This repository contains a simulated video translation status server and a client library that provides a smarter polling strategy to fetch the final status of a video translation job.
 
-## Server
+## Project Structure
 
 - **Server:**  
   Simulates a video translation backend:
@@ -33,8 +33,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 cd client
 pip install -r requirements.txt
 ```
-Use the Client: In a Python script or interactive shell:
-
+#### Use the Client: In a Python script or interactive shell:
 ```
 from client import TranslationStatusClient
 
