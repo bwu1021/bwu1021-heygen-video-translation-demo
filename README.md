@@ -20,10 +20,29 @@ This repository contains a simulated video translation status server and a clien
   - Polls until `completed` or `error`.
   - Prints logs for insight (also saved in files)
 
-### Running the Server
+### Setting up the Server
+- **Install Server Dependencies:** 
 ```bash
 cd server
 pip install -r requirements.txt
+
+# Create a file named .env in the server/ directory. This file will store environment variables required by the server.
+touch .env
+```
+- **Open the .env file in your text editor and add the following environment variables:** 
+```bash
+# Basic Authentication Credentials
+API_USERNAME=admin
+API_PASSWORD=secretpassword
+
+# Job Configuration
+MIN_DELAY=3               # Minimum delay (in seconds) before a job status changes from 'pending'
+MAX_DELAY=7               # Maximum delay (in seconds) before a job status changes from 'pending'
+ERROR_PROBABILITY=0.3     # Probability (between 0 and 1) that a job ends with an 'error'
+```
+
+- **Running the server:** 
+```bash
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
