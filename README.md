@@ -5,46 +5,59 @@ This repository contains a simulated video translation status server and a clien
 ## Project Structure
 
 - **Server:**  
-  Simulates a video translation backend:
-  - `GET /status` returns `{"result":"pending"}` until a chosen delay passes.
-  - After the delay, returns either `{"result":"completed"}` or `{"result":"error"}` based on a configured probability.
+  - Secure endpoints using Basic Authentication.
+  - POST /start initiates a new translation job.
+  - GET /status/{job_id} returns the status of a specific job (pending, completed, or error)
 
 - **Client Library:**  
-  A client that:
   - Polls the server’s `/status` endpoint with exponential backoff.
   - Logs attempts and final outcomes.
-  - Allows configuration of polling intervals.
+  - Allows configuration of polling intervals and authentication credentials.
 
 - **Integration Test:**  
-  Demonstrates how the client interacts with the server:
   - Starts the server in a subprocess.
+  - Initiates a job via the client.
   - Polls until `completed` or `error`.
-  - Prints logs for insight.
+  - Prints logs for insight (also saved in files)
 
 ### Running the Server
-```
+```bash
 cd server
 pip install -r requirements.txt
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
 ### Running the Client
-```
+```bash
 cd client
 pip install -r requirements.txt
 ```
 #### Use the Client: In a Python script or interactive shell:
-```
+```bash
 from client import TranslationStatusClient
 
-client = TranslationStatusClient("http://127.0.0.1:8000")
-final_result = client.wait_for_completion()
-print(f"Final status: {final_result}")
+# Initialize the client
+client = TranslationStatusClient(
+    base_url="http://127.0.0.1:8000",
+    username="admin",
+    password="secretpassword"
+)
+
+# Start a new job
+job_id = client.start_job()
+if not job_id:
+    raise Exception("Failed to start a new job.")
+
+print(f"Started job with ID: {job_id}")
+
+# Wait for the job to complete
+final_status = client.wait_for_completion(job_id)
+print(f"Test completed with final status: {final_status}")
 ```
 
 ### Running the Integration Test
 
-```
+```bash
 # Make sure all dependencies are installed
 cd server
 pip install -r requirements.txt
@@ -53,5 +66,5 @@ pip install -r requirements.txt
 cd ..
 
 # From project root
-python test_integration.py
+python3 test_integration.py
 ```
