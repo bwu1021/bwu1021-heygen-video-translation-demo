@@ -31,9 +31,10 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 ```bash
 cd client
 pip install -r requirements.txt
+python3 client.py --username admin --password secretpassword
 ```
 #### Use the Client: In a Python script or interactive shell:
-```bash
+```python
 from client import TranslationStatusClient
 
 # Initialize the client
